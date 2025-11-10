@@ -5,6 +5,7 @@ import { updateProfile } from "firebase/auth";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
 
 export default function Login() {
+  //states for storing user input and form state
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,16 +17,18 @@ export default function Login() {
     e.preventDefault();
     setError("");
 
-     if (isRegistering && password.length < 6) {
-    setError("Password must be at least 6 characters");
-    return;  // Prevent further execution if validation fails
-    }
+    //simple password validation 
+   if (isRegistering && password.length < 6) {
+     setError("Password must be at least 6 characters");
+     return;  // Prevent further execution if validation fails
+     }
 
     
     try {
       if (isRegistering) {
         // Register new user
         const userCred = await createUserWithEmailAndPassword(auth, email, password);
+        // Update the user's display name in Firebase
         await updateProfile(userCred.user, { displayName: fullName });
         alert("You have registered succesfully!");
       } else {
@@ -33,11 +36,11 @@ export default function Login() {
         await signInWithEmailAndPassword(auth, email, password);
         alert("Logged in successful!");
       }
-
+      // Redirect to home page after successful login/registration
       router.push("/home");
     } catch (err) {
         const code = err.code ? err.code.replace("auth/", "") : "unknown-error";
-        setError(code);
+        setError(code); //display error message
     }
   };
 
