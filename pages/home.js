@@ -5,15 +5,16 @@ import { auth } from "../lib/firebase";
 
 export default function Home() {
   
-  const [userName, setUserName] = useState(null);
-  const router = useRouter();
+  const [userName, setUserName] = useState(null); //state to store logged in user's name
+  const router = useRouter(); //next js router to navigate programmatically
 
+  //we check if the user is logged in 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
         if (user) {
             setUserName(user.displayName || 'User');
         } else {
-            router.push("/login");
+            router.push("/login"); //redirect to login if no user
         }
     });
     return () => unsubscribe();
@@ -24,7 +25,8 @@ export default function Home() {
     router.push("/login");
   };
 
-  if (!userName) return <p>Loading...</p>;
+  //loading message while checking auth
+  if (!userName) return <p>Loading...</p>; 
 
   return (
     <div style={{ textAlign: "center", marginTop: "5rem" }}>
